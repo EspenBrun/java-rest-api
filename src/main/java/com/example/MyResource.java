@@ -15,9 +15,9 @@ import java.util.UUID;
  */
 @Path("/myresource")
 public class MyResource {
-    private final String username = "espenkb";
-    private final String password = "nN3MZOCh";
-    
+    private Connection connection;
+    private Statement statement;
+
     @GET
     @Path("/list")
     public Response getMsg() {
@@ -27,48 +27,50 @@ public class MyResource {
 
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public Response createMessage(@FormParam("name") String name, @FormParam("adress") String adress, @FormParam("phone") String phone) throws Exception {
-        System.out.println("name: " + name + ", adress: " + adress + ", phone: " + phone );
-        name = name.trim();
-        adress = adress.trim();
-        phone = phone.trim();
+    public Response createMessage(@FormParam("name") String name, @FormParam("adress") String adress, @FormParam("phone") String phone){
+        int result;
         String output;
 
-        String databasedriver = "com.mysql.jdbc.Driver";
-        Class.forName(databasedriver);
-
-        String databasenavn = "jdbc:mysql://mysql.stud.iie.ntnu.no:3306/" + username + "?user=" + username + "&password=" + password;
-        Connection connection = DriverManager.getConnection(databasenavn);
-        Statement statement = connection.createStatement();
-
-        String query = "insert into triona_person values (null, '" + name + "', '" + adress + "', " + phone + ");";
-
-        int result = statement.executeUpdate(query);
-
-        if (result == 0){
-            output = "query wrong";
-        } else {
-            output = "query executed";
+        try {
+            dbConnect();
+            result = dbInsert(name.trim(), adress.trim(), phone.trim());
+            output = postOutput(result);
+            dbClose();
+        } catch(Exception e){
+            output = e.toString();
         }
-
-        statement.close();
-        connection.close();
-        System.out.println(output);
 
         return Response.created(URI.create("/webapi/myresource/" + String.valueOf(UUID.randomUUID()))).entity(output).build();
     }
 
-    /**
-     * Method handling HTTP GET requests. The returned object will be sent
-     * to the client as "text/plain" media type.
-     *
-     * @return String that will be returned as a text/plain response.
-     */
-//    @GET
-//    @Produces(MediaType.TEXT_PLAIN)
-//    public String getIt() {
-//        System.out.print("hello from server");
-//        return "Got it!";
-//    }
+    private int dbInsert(String name, String adress, String phone) throws Exception{
+        String query = "insert into triona_person values (null, '" + name + "', '" + adress + "', " + phone + ");";
+        return statement.executeUpdate(query);
+    }
+
+    private String postOutput(int result){
+        if (result == 0) {
+            return "query wrong";
+        } else {
+            return "query executed";
+        }
+    }
+
+    private void dbConnect() throws Exception{
+        String username = "espenkb";
+        String password = "nN3MZOCh";
+        String databasenavn = "jdbc:mysql://mysql.stud.iie.ntnu.no:3306/" + username + "?user=" + username + "&password=" + password;
+        String databasedriver = "com.mysql.jdbc.Driver";
+
+        Class.forName(databasedriver);
+
+        connection = DriverManager.getConnection(databasenavn);
+        statement = connection.createStatement();
+    }
+
+    private void dbClose() throws Exception{
+        statement.close();
+        connection.close();
+    }
 }
 
