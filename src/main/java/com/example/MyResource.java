@@ -1,7 +1,5 @@
 package com.example;
 
-import jdk.nashorn.internal.runtime.ECMAException;
-
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -24,7 +22,8 @@ public class MyResource {
 
     @GET
     @Path("/list")
-    public Response getMsg() {
+    @Produces(MediaType.TEXT_PLAIN)
+    public String getMsg() {
         try {
             dbConnect();
             output = getPersonsAndCreateGetOutput();
@@ -32,7 +31,7 @@ public class MyResource {
         } catch (Exception e){
             output = e.toString();
         }
-        return Response.status(200).entity(output).build();
+        return output;
     }
 
     @POST
@@ -53,7 +52,7 @@ public class MyResource {
     }
 
     private int dbInsert(String name, String adress, String phone) throws Exception{
-        query = "insert into triona_person values (null, '" + name + "', '" + adress + "', " + phone + ");";
+        query = "insert into triona_person values (null, '" + name + "', '" + adress + "', '" + phone + "');";
         return statement.executeUpdate(query);
     }
 

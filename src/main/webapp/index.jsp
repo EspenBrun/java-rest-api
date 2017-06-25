@@ -22,7 +22,7 @@
 				<p class="text-center">Espen Kirkes&aelig;ther Brun</p>
 				<h2 class="text-center">Fyll inn skjema</h2>
 				<form 
-					action="http://localhost:8080/simple-service-webapp/webapi/myresource"
+					action="/simple-service-webapp/webapi/myresource"
 					method="post" 
 					id="form-reg" 
 					class="form-horizontal form-registration">
@@ -50,7 +50,7 @@
 				    </div>
 				  </div>
 				</form>
-				<a href="http://localhost:8080/simple-service-webapp/webapi/myresource/list">GET list of persons</a>
+				<a href="/simple-service-webapp/webapi/myresource/list">GET list of persons</a>
 			</div>
 		</div>
 		
