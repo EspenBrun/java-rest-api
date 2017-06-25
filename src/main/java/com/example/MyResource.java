@@ -19,9 +19,9 @@ public class MyResource {
     private final String password = "nN3MZOCh";
     
     @GET
-    @Path("/{param}")
-    public Response getMsg(@PathParam("param") String msg) {
-        String output = "Get:Jersey say : " + msg;
+    @Path("/list")
+    public Response getMsg() {
+        String output = "Get:Jersey say :";
         return Response.status(200).entity(output).build();
     }
 
@@ -55,7 +55,7 @@ public class MyResource {
         connection.close();
         System.out.println(output);
 
-        return Response.created(URI.create("/webapi/myresource/" + String.valueOf(UUID.randomUUID()))).entity(name).build();
+        return Response.created(URI.create("/webapi/myresource/" + String.valueOf(UUID.randomUUID()))).entity(output).build();
     }
 
     /**

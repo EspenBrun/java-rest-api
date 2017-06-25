@@ -49,7 +49,8 @@
 				      <button type="submit" form="form-reg" name="btn-reg" class="btn btn-primary btn-block">Submit</button>
 				    </div>
 				  </div>
-				</form>	
+				</form>
+				<a href="http://localhost:8080/simple-service-webapp/webapi/myresource/list">GET list of persons</a>
 			</div>
 		</div>
 		
