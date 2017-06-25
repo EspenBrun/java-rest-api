@@ -1,10 +1,14 @@
 package com.example;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.xml.bind.SchemaOutputResolver;
+import java.net.URI;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
+import java.util.UUID;
 
 /**
  * Root resource (exposed at "myresource" path)
@@ -22,8 +26,12 @@ public class MyResource {
     }
 
     @POST
-    @Path("/{param}")
-    public Response postMsg(@PathParam("param") String msg) throws Exception {
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    public Response createMessage(@FormParam("name") String name, @FormParam("adress") String adress, @FormParam("phone") String phone) throws Exception {
+        System.out.println("name: " + name + ", adress: " + adress + ", phone: " + phone );
+        name = name.trim();
+        adress = adress.trim();
+        phone = phone.trim();
         String output;
 
         String databasedriver = "com.mysql.jdbc.Driver";
@@ -33,9 +41,6 @@ public class MyResource {
         Connection connection = DriverManager.getConnection(databasenavn);
         Statement statement = connection.createStatement();
 
-        String name = "Espen";
-        String adress = "Street 1";
-        String phone = "99887766";
         String query = "insert into triona_person values (null, '" + name + "', '" + adress + "', " + phone + ");";
 
         int result = statement.executeUpdate(query);
@@ -48,8 +53,9 @@ public class MyResource {
 
         statement.close();
         connection.close();
+        System.out.println(output);
 
-        return Response.status(200).entity(output).build();
+        return Response.created(URI.create("/webapi/myresource/" + String.valueOf(UUID.randomUUID()))).entity(name).build();
     }
 
     /**

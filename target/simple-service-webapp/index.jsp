@@ -22,7 +22,7 @@
 				<p class="text-center">Espen Kirkes&aelig;ther Brun</p>
 				<h2 class="text-center">Fyll inn skjema</h2>
 				<form 
-					
+					action="http://localhost:8080/simple-service-webapp/webapi/myresource"
 					method="post" 
 					id="form-reg" 
 					class="form-horizontal form-registration">
@@ -35,7 +35,7 @@
 				  <div class="form-group">
 				    <label class="control-label col-sm-2" for="adress">Adress:</label>
 				    <div class="col-sm-10">
-				      <input type="text" class="form-control" name="adredss" placeholder="Adredss">
+				      <input type="text" class="form-control" name="adress" placeholder="Adress">
 				    </div>
 				  </div>
 				  <div class="form-group">
