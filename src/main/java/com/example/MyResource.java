@@ -1,15 +1,56 @@
 package com.example;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Response;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
 
 /**
  * Root resource (exposed at "myresource" path)
  */
 @Path("/myresource")
 public class MyResource {
+    private final String username = "espenkb";
+    private final String password = "nN3MZOCh";
+    
+    @GET
+    @Path("/{param}")
+    public Response getMsg(@PathParam("param") String msg) {
+        String output = "Get:Jersey say : " + msg;
+        return Response.status(200).entity(output).build();
+    }
+
+    @POST
+    @Path("/{param}")
+    public Response postMsg(@PathParam("param") String msg) throws Exception {
+        String output;
+
+        String databasedriver = "com.mysql.jdbc.Driver";
+        Class.forName(databasedriver);
+
+        String databasenavn = "jdbc:mysql://mysql.stud.iie.ntnu.no:3306/" + username + "?user=" + username + "&password=" + password;
+        Connection connection = DriverManager.getConnection(databasenavn);
+        Statement statement = connection.createStatement();
+
+        String name = "Espen";
+        String adress = "Street 1";
+        String phone = "99887766";
+        String query = "insert into triona_person values (null, '" + name + "', '" + adress + "', " + phone + ");";
+
+        int result = statement.executeUpdate(query);
+
+        if (result == 0){
+            output = "query wrong";
+        } else {
+            output = "query executed";
+        }
+
+        statement.close();
+        connection.close();
+
+        return Response.status(200).entity(output).build();
+    }
 
     /**
      * Method handling HTTP GET requests. The returned object will be sent
@@ -17,9 +58,11 @@ public class MyResource {
      *
      * @return String that will be returned as a text/plain response.
      */
-    @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    public String getIt() {
-        return "Got it!";
-    }
+//    @GET
+//    @Produces(MediaType.TEXT_PLAIN)
+//    public String getIt() {
+//        System.out.print("hello from server");
+//        return "Got it!";
+//    }
 }
+
